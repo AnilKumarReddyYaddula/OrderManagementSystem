@@ -1,0 +1,56 @@
+create database OrderManagementSystem
+
+
+
+use OrderManagementSystem
+create table Roles(RoleId int identity(1,1) primary key, RoleType varchar(30))
+Select * from Products
+
+insert into Roles values('Administrator');
+insert into Roles values ('Buyer');
+
+create table OrderStatus(StatusId int primary key, StatusDesc varchar(30))
+Select * from OrderStatus
+
+insert into OrderStatus values(30,'Placed');
+insert into OrderStatus values(60,'Approved');
+insert into OrderStatus values(80,'Cancelled');
+
+insert into OrderStatus values(90,'InDelivery');
+insert into OrderStatus values(100,'Completed');
+
+
+create table Products(ProductId int identity(1,1) primary key, Name varchar(30), 
+weight float,Height float,ImageId varchar(100),stockkeepingUnit int, 
+barcode bigint, Availablequantity int);
+
+
+drop table Items
+
+insert into Products values ('Apple',20,1,'1',100,1,12);
+insert into Products values('Ball',20,1,'2',200,2,23);
+insert into Products values('Camera',60,40,'3',300,3,34);
+insert into Products values('Doll',10,60,'4',400,4,45);
+insert into Products values('Earphones',15,1,'5',500,5,56);
+insert into Products values('Icecream',40,5,'6',600,6,67);
+insert into Products values('jug',30,18,'7',700,7,78);
+
+
+Select * from Items
+
+rename 
+
+
+Select * from OrderStatus
+
+Select * from Orders
+
+Create Table Users(UserId int primary key identity(1,1),Name varchar(100),MailId varchar(200),Role int foreign Key references Roles(RoleId),Mobile varchar(15))
+
+
+insert into Users values('Manohar','inboxmanoharreddy@gmail.com',2,'8121957833');
+insert into Users values('Anil','inboxmanoharreddy@gmail.com',1,'7097108009');
+
+Create table Orders(OrderId int primary key identity(1,1),Status int Foreign Key references OrderStatus(StatusId),UserId int foreign key references Users(UserId),ShippingAddress varchar(300) )
+
+Create table Items(ItemId int identity(1,1),ProductId int foreign key references Products(ProductId),OrderId int,Quantity int,CONSTRAINT PK_Items PRIMARY KEY (ProductId,OrderId))

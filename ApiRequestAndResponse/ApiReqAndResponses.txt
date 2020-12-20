@@ -1,0 +1,109 @@
+http://localhost:60506/GetAllOrderByAdministrator
+
+
+Response:-
+[
+    {
+        "Name": "Manohar",
+        "RoleType": "Buyer",
+        "OrderId": 1,
+        "StatusDesc": "Placed",
+        "ShippingAddress": "Prashanthi hills,Meerpet"
+    },
+    {
+        "Name": "Anil",
+        "RoleType": "Administrator",
+        "OrderId": 2,
+        "StatusDesc": "Placed",
+        "ShippingAddress": "Sai nagar,Balapur"
+    },
+    {
+        "Name": "Anil",
+        "RoleType": "Administrator",
+        "OrderId": 4,
+        "StatusDesc": "Placed",
+        "ShippingAddress": "Knowledge center, Madhapur"
+    }
+	
+	
+
+]
+
+
+==============================================
+http://localhost:60506/GetAllOrderByBuyer/UserId/1
+
+
+[
+    {
+        "Name": "Manohar",
+        "RoleType": "Buyer",
+        "OrderId": 1,
+        "StatusDesc": "Placed",
+        "ShippingAddress": "Prashanthi hills,Meerpet"
+    }
+]
+
+
+=================================================
+http://localhost:60506/InsertOrder
+
+
+request:-
+
+{
+  "Status":30,
+   "UserId":2,
+    "ShippingAddress":"Lingam pally",
+	 "ProductId":2,
+	  "Quantity":50,
+	  "OrderId":5
+  
+}
+
+response:-
+true
+
+==================
+
+http://localhost:60506/UpdateOrder
+
+
+request:-
+
+{
+"OrderId":1,
+"UserId":2,
+  "Status":60,   
+    "ShippingAddress":"Dilsukhnagar",
+	"Quantity":50,
+	"ItemId":2,
+	 "ProductId":3
+}
+
+response:-
+true
+
+==================
+
+http://localhost:60506/DeleteOrder/OrderId/20
+
+
+request:-
+
+
+response:-
+false
+
+==============
+
+http://localhost:60506/GetAllOrderByAdministratorIndetail
+
+
+
+
+
+
+===============================================================
+
+

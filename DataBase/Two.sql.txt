@@ -1,0 +1,217 @@
+
+use OrderManagementSystem
+Select * from Roles
+Select * from Users
+
+Select * from OrderStatus
+
+Select * from Orders
+Select * from Products
+Select * from Items
+
+insert into Orders Values(30,1,'Prashanthi hills,Meerpet');
+insert into Orders Values(30,2,'Sai nagar,Balapur');
+insert into Orders Values(30,1,'Sai nagar,Balapur');
+
+insert into Items values(1,1,5);
+insert into Items values(3,1,10);
+insert into Items values(5,1,15);
+
+
+insert into Items values(5,3,10);
+insert into Items values(6,3,20);
+
+
+insert into Items values(2,2,10);
+insert into Items values(4,2,20);
+insert into Items values(6,2,20);
+
+--Query for displaying all records for Administrator--OrderByAdminstrator
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress from
+ Orders O  Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ order by U.UserId desc
+ 
+ --Query for displaying all records for Administrator--OrderByBuyer
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress from
+ Orders O  Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ where r.RoleId=2
+ --and u.UserId=@UserId
+ order by U.UserId,o.OrderId desc
+ 
+ --Query for displaying selective records for Buyer--OrderbyBuyerIndetail
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress, P.Name,P.ProductId,P.Height,P.weight,P.barcode,P.ImageId,I.ItemId,
+I.Quantity from
+ Products P join Items I on I.ProductId=P.ProductId join Orders O 
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R 
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ where r.RoleId=2
+ and u.UserId=@UserId
+ order by U.UserId desc
+
+--Query for displaying all records for Administrator--OrderByAdminstratorIndetail
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress, P.Name,P.ProductId,P.Height,P.weight,P.barcode,P.ImageId,I.ItemId,
+I.Quantity from
+ Products P join Items I on I.ProductId=P.ProductId join Orders O 
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status order by U.UserId desc
+ --where r.RoleId=1 and u.UserId=''
+ 
+ --Query for displaying selective records for Buyer--OrderbyBuyerIndetail
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress, P.Name,P.ProductId,P.Height,P.weight,P.barcode,P.ImageId,I.ItemId,
+I.Quantity from
+ Products P join Items I on I.ProductId=P.ProductId join Orders O 
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R 
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ where r.RoleId=2
+ --and u.UserId=@UserId
+ order by U.UserId desc
+ 
+ --Insert Order
+ @status,@UserId,@ShippingAddress
+ @productId,@quantity
+ 
+ 
+ insert into Orders Values(30,1,'Prashanthi hills,Meerpet');
+ insert into Items values(1, Select MAX(orderId) from Orders ,5);
+
+
+
+ --Update Order
+ @orderId, @status,@shippingAddress,@quantity,@ItemId,@prductId
+ update Orders set Status=@status , shippingAddress=@shippingAddress
+  where OrderId=@OrderId and UserId=@ UserId
+ 
+ --Update OrderItem
+ 
+ 
+ update Items set Quantity=@quantiy where ItemId=@itemId
+ 
+ and OrderId= and  ProductId=@productId
+  
+ 
+ --Delete Order
+ @orderId
+ delete Items where OrderId=
+ 
+ delete Orders where OrderId=
+ 
+ CREATE PROCEDURE SP_DeleteOrder @OrderId int
+AS begin
+delete from  Items where OrderId=@OrderId;
+ 
+ delete  from Orders where OrderId=@OrderId;
+End
+
+Exec SP_DeleteOrder 3
+
+
+ 
+ Alter PROCEDURE SP_UpdateOrder 
+  @orderId int, @userId int,@status int,
+ @shippingAddress varchar(300), @quantity int,@itemId int,@productId int
+AS begin
+update Orders set Status=@status , shippingAddress=@shippingAddress
+  where OrderId=@orderId and UserId=@userId
+ 
+ 
+ update Items set Quantity = @quantity where ItemId=@itemId
+ 
+ and OrderId=@orderId and  ProductId=@productId
+End
+
+Exec SP_UpdateOrder 1,2,60,'Knowledge center, Madhapur',50,2,3
+
+
+select * from orders where OrderId=4
+
+update  orders set Status=40 where  OrderId=4
+
+
+
+
+ 
+ Create PROCEDURE SP_CreateOrder 
+  @status int,@userId int,@shippingAddress varchar(300),
+ @productId int,@quantity int,@orderId int
+ AS begin
+
+ insert into Orders Values(@status,@userId,@shippingAddress);
+ 
+ insert into Items values(@productId, @orderId  ,@quantity);
+End
+
+Exec SP_CreateOrder 30,2,'Knowledge center, Madhapur',2,50,3
+
+
+ create PROCEDURE SP_OrderByBuyer 
+  @userId int
+ AS begin
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress from
+ Orders O  Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ where r.RoleId=2
+ and u.UserId=@userId
+ order by o.OrderId,U.UserId asc
+End
+
+Exec SP_OrderByBuyer 1
+
+
+ Create PROCEDURE SP_OrderByAdministrator 
+ AS begin
+
+ Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress from
+ Orders O  Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+  order by o.OrderId,U.UserId Asc
+End
+
+Exec SP_OrderByAdministrator
+
+
+
+ Create PROCEDURE SP_OrderByBuyerInDetail 
+   @userId int
+ AS begin
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress, P.Name,P.ProductId,P.Height,P.weight,P.barcode,P.ImageId,I.ItemId,
+I.Quantity from
+ Products P join Items I on I.ProductId=P.ProductId join Orders O 
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R 
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ where r.RoleId=2
+ and u.UserId=@userId
+ order by O.OrderId,U.UserId,I.ItemId,P.ProductId asc
+End
+
+Exec SP_OrderByBuyerInDetail 1
+
+
+Create PROCEDURE SP_OrderByAdministratorInDetail 
+    AS begin
+Select U.Name ,R.RoleType,o.OrderId,OS.StatusDesc,o.ShippingAddress, P.Name,P.ProductId,P.Height,P.weight,P.barcode,P.ImageId,I.ItemId,
+I.Quantity from
+ Products P join Items I on I.ProductId=P.ProductId join Orders O 
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R  
+ on o.OrderId=I.OrderId Join Users U on u.UserId=O.UserId join Roles R  
+ on r.RoleId=U.Role join OrderStatus OS on OS.StatusId=O.Status 
+ order by U.UserId,O.OrderId,I.ItemId,P.ProductId asc
+End
+
+Exec SP_OrderByAdministratorInDetail 
+
+
+Select * from users
+
+
+
+Create PROCEDURE SP_GetEmailIdOfuser
+  @userId int
+ AS begin
+Select top 1 MailId,Name from users where UserId=@userId
+End
+
+Select * from users
+
+Exec SP_GetEmailIdOfuser 1
